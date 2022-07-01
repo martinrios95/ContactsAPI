@@ -16,14 +16,14 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult getCities()
+        public IActionResult GetCities()
         {
             return Ok(dbContext.Cities.ToList());
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public IActionResult getCity([FromRoute] int id)
+        public IActionResult GetCity([FromRoute] int id)
         {
             City city = dbContext.Cities.Find(id);
             if (city != null)
@@ -35,7 +35,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult addCity(CityDTO model)
+        public IActionResult AddCity(CityDTO model)
         {
             State state = dbContext.States.Find(model.StateID);
 
@@ -58,7 +58,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult updateCity([FromRoute] int id, CityDTO model)
+        public IActionResult UpdateCity([FromRoute] int id, CityDTO model)
         {
             State state = dbContext.States.Find(model.StateID);
 
@@ -84,7 +84,7 @@ namespace ContactsAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        public IActionResult deleteCity([FromRoute] int id)
+        public IActionResult DeleteCity([FromRoute] int id)
         {
             City city = dbContext.Cities.Find(id);
 

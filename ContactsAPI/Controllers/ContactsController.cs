@@ -62,7 +62,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult updateContact([FromRoute] Guid id, ContactDTO model)
+        public IActionResult UpdateContact([FromRoute] Guid id, ContactDTO model)
         {
             City city = dbContext.Cities.Find(model.CityID);
 
@@ -90,7 +90,7 @@ namespace ContactsAPI.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        public IActionResult deleteContact([FromRoute] Guid id)
+        public IActionResult DeleteContact([FromRoute] Guid id)
         {
             Contact contact = dbContext.Contacts.Find(id);
 

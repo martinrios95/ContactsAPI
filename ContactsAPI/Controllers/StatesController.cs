@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data;
+using ContactsAPI.Data.Interfaces;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,24 +9,24 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class StatesController : Controller
     {
-        private readonly ContactsAPIDbContext dbContext;
+        private readonly IRepository<State> repository;
 
         public StatesController(ContactsAPIDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            repository = new Repository<State>(dbContext);
         }
 
         [HttpGet]
         public IActionResult GetStates()
         {
-            return Ok(dbContext.States.ToList());
+            return Ok(repository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetState([FromRoute] int id)
         {
-            State state = dbContext.States.Find(id);
+            State state = repository.Read(id);
 
             if (state != null)
             {
@@ -43,8 +44,8 @@ namespace ContactsAPI.Controllers
                 StateName = model.StateName
             };
 
-            dbContext.States.Add(state);
-            dbContext.SaveChanges();
+            repository.Create(state);
+            repository.Save();
 
             return Ok(state);
         }
@@ -53,13 +54,13 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult UpdateState([FromRoute] int id, StateDTO model)
         {
-            State state = dbContext.States.Find(id);
+            State state = repository.Read(id);
 
             if (state != null)
             {
                 state.StateName = model.StateName;
 
-                dbContext.SaveChanges();
+                repository.Save();
 
                 return Ok(state);
             }
@@ -71,13 +72,13 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult DeleteState([FromRoute] int id)
         {
-            State state = dbContext.States.Find(id);
+            State state = repository.Read(id);
 
             if (state != null)
             {
-                dbContext.States.Remove(state);
+                repository.Delete(id);
 
-                dbContext.SaveChanges();
+                repository.Save();
 
                 return Ok(state);
             }

@@ -35,7 +35,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult addCity(AddCityModel model)
+        public IActionResult addCity(CityDTO model)
         {
             State state = dbContext.States.Find(model.StateID);
 
@@ -58,7 +58,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult updateCity([FromRoute] int id, UpdateCityModel model)
+        public IActionResult updateCity([FromRoute] int id, CityDTO model)
         {
             State state = dbContext.States.Find(model.StateID);
 

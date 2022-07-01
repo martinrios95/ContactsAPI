@@ -1,6 +1,6 @@
 ﻿namespace ContactsAPI.Models
 {
-    public class AddContactModel
+    public class ContactDTO
     {
         public string ContactName { get; set; }
 

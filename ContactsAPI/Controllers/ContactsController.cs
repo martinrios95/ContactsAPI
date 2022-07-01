@@ -16,14 +16,14 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult getContacts()
+        public IActionResult GetContacts()
         {
             return Ok(dbContext.Contacts.ToList());
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public IActionResult getContact([FromRoute] Guid id)
+        public IActionResult GetContact([FromRoute] Guid id)
         {
             Contact contact = dbContext.Contacts.Find(id);
 
@@ -36,7 +36,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult addContact(AddContactModel model)
+        public IActionResult AddContact(ContactDTO model)
         {
             City city = dbContext.Cities.Find(model.CityID);
 
@@ -62,7 +62,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult updateContact([FromRoute] Guid id, UpdateContactModel model)
+        public IActionResult updateContact([FromRoute] Guid id, ContactDTO model)
         {
             City city = dbContext.Cities.Find(model.CityID);
 

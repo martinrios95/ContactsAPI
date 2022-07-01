@@ -1,6 +1,6 @@
 ﻿namespace ContactsAPI.Models
 {
-    public class AddStateModel
+    public class StateDTO
     {
         public string StateName { get; set; }
     }

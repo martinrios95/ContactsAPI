@@ -8,24 +8,24 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class ContactsController : Controller
     {
-        private readonly ContactsAPIDbContext dbContext;
+        private readonly UnitOfWork unitOfWork;
 
         public ContactsController(ContactsAPIDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            unitOfWork = new UnitOfWork(dbContext);
         }
 
         [HttpGet]
         public IActionResult GetContacts()
         {
-            return Ok(dbContext.Contacts.ToList());
+            return Ok(unitOfWork.ContactsRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetContact([FromRoute] Guid id)
         {
-            Contact contact = dbContext.Contacts.Find(id);
+            Contact contact = unitOfWork.ContactsRepository.Read(id);
 
             if (contact == null)
             {
@@ -38,7 +38,7 @@ namespace ContactsAPI.Controllers
         [HttpPost]
         public IActionResult AddContact(ContactDTO model)
         {
-            City city = dbContext.Cities.Find(model.CityID);
+            City city = unitOfWork.CitiesRepository.Read(model.CityID);
 
             if (city == null)
             {
@@ -54,8 +54,8 @@ namespace ContactsAPI.Controllers
                 CityID = model.CityID
             };
 
-            dbContext.Contacts.Add(contact);
-            dbContext.SaveChanges();
+            unitOfWork.ContactsRepository.Create(contact);
+            unitOfWork.Save();
 
             return Ok(contact);
         }
@@ -64,14 +64,14 @@ namespace ContactsAPI.Controllers
         [Route("{id:guid}")]
         public IActionResult UpdateContact([FromRoute] Guid id, ContactDTO model)
         {
-            City city = dbContext.Cities.Find(model.CityID);
+            City city = unitOfWork.CitiesRepository.Read(model.CityID);
 
             if (city == null)
             {
                 return NotFound(Content("City not found"));
             }
 
-            Contact contact = dbContext.Contacts.Find(id);
+            Contact contact = unitOfWork.ContactsRepository.Read(id);
 
             if (contact != null)
             {
@@ -80,7 +80,7 @@ namespace ContactsAPI.Controllers
                 contact.ContactPhone = model.ContactPhone;
                 contact.CityID = model.CityID;
 
-                dbContext.SaveChanges();
+                unitOfWork.Save();
 
                 return Ok(contact);
             }
@@ -92,12 +92,12 @@ namespace ContactsAPI.Controllers
         [Route("{id:guid}")]
         public IActionResult DeleteContact([FromRoute] Guid id)
         {
-            Contact contact = dbContext.Contacts.Find(id);
+            Contact contact = unitOfWork.ContactsRepository.Read(id);
 
             if (contact != null)
             {
-                dbContext.Remove(contact);
-                dbContext.SaveChanges();
+                unitOfWork.ContactsRepository.Delete(id);
+                unitOfWork.Save();
 
                 return Ok(contact);
             }

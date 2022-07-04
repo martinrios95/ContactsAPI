@@ -2,7 +2,7 @@
 
 namespace ContactsAPI.Data
 {
-    public class Repository<T> : IRepository<T> where T: class
+    public class Repository<T, K> : IRepository<T, K> where T : class
     {
         protected ContactsAPIDbContext dbContext;
 
@@ -14,18 +14,16 @@ namespace ContactsAPI.Data
         public T Create(T entity)
         {
             dbContext.Set<T>().Add(entity);
-            Save();
             return entity;
         }
 
-        public T Delete(int id)
+        public T Delete(K id)
         {
             T entity = Read(id);
 
             if (entity != null)
             {
                 dbContext.Set<T>().Remove(entity);
-                Save();
             }
 
             return entity;
@@ -36,7 +34,7 @@ namespace ContactsAPI.Data
             return dbContext.Set<T>().ToList();
         }
 
-        public T Read(int id)
+        public T Read(K id)
         {
             return dbContext.Set<T>().Find(id);
         }
@@ -44,11 +42,6 @@ namespace ContactsAPI.Data
         public T Update(T entity)
         {
             throw new NotImplementedException();
-        }
-
-        public void Save()
-        {
-            dbContext.SaveChanges();
         }
     }
 }

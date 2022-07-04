@@ -8,24 +8,24 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class CitiesController : Controller
     {
-        private readonly ContactsAPIDbContext dbContext;
+        private readonly UnitOfWork unitOfWork;
 
         public CitiesController(ContactsAPIDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            unitOfWork = new UnitOfWork(dbContext);
         }
 
         [HttpGet]
         public IActionResult GetCities()
         {
-            return Ok(dbContext.Cities.ToList());
+            return Ok(unitOfWork.CitiesRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetCity([FromRoute] int id)
         {
-            City city = dbContext.Cities.Find(id);
+            City city = unitOfWork.CitiesRepository.Read(id);
             if (city != null)
             {
                 return Ok(city);
@@ -37,7 +37,7 @@ namespace ContactsAPI.Controllers
         [HttpPost]
         public IActionResult AddCity(CityDTO model)
         {
-            State state = dbContext.States.Find(model.StateID);
+            State state = unitOfWork.StatesRepository.Read(model.StateID);
 
             if (state == null)
             {
@@ -50,8 +50,8 @@ namespace ContactsAPI.Controllers
                 StateID = model.StateID
             };
 
-            dbContext.Cities.Add(city);
-            dbContext.SaveChanges();
+            unitOfWork.CitiesRepository.Create(city);
+            unitOfWork.Save();
 
             return Ok(city);
         }
@@ -60,21 +60,21 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult UpdateCity([FromRoute] int id, CityDTO model)
         {
-            State state = dbContext.States.Find(model.StateID);
+            State state = unitOfWork.StatesRepository.Read(model.StateID);
 
             if (state == null)
             {
                 return NotFound(Content("State not found"));
             }
 
-            City city = dbContext.Cities.Find(id);
+            City city = unitOfWork.CitiesRepository.Read(id);
 
             if (city != null)
             {
                 city.CityName = model.CityName;
                 city.StateID = model.StateID;
 
-                dbContext.SaveChanges();
+                unitOfWork.CitiesRepository.Update(city);
 
                 return Ok(city);
             }
@@ -86,16 +86,16 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult DeleteCity([FromRoute] int id)
         {
-            City city = dbContext.Cities.Find(id);
+            City city = unitOfWork.CitiesRepository.Read(id);
 
             // TODO: The state's not gonna be wiped
 
             if (city != null)
             {
 
-                dbContext.Remove(city);
+                unitOfWork.CitiesRepository.Delete(id);
 
-                dbContext.SaveChanges();
+                unitOfWork.Save();
 
                 return Ok(city);
             }

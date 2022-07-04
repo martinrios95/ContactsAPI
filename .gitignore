@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 # SQLite generated databases from Entity Framework migrations
 *.db
+*.db-shm
+*.db-wal

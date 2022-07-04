@@ -1,5 +1,4 @@
 ﻿using ContactsAPI.Data;
-using ContactsAPI.Data.Interfaces;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +8,24 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class StatesController : Controller
     {
-        private readonly IRepository<State> repository;
+        private readonly UnitOfWork unitOfWork;
 
         public StatesController(ContactsAPIDbContext dbContext)
         {
-            repository = new Repository<State>(dbContext);
+            unitOfWork = new UnitOfWork(dbContext);
         }
 
         [HttpGet]
         public IActionResult GetStates()
         {
-            return Ok(repository.GetAll());
+            return Ok(unitOfWork.StatesRepository.GetAll());
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetState([FromRoute] int id)
         {
-            State state = repository.Read(id);
+            State state = unitOfWork.StatesRepository.Read(id);
 
             if (state != null)
             {
@@ -44,8 +43,8 @@ namespace ContactsAPI.Controllers
                 StateName = model.StateName
             };
 
-            repository.Create(state);
-            repository.Save();
+            unitOfWork.StatesRepository.Create(state);
+            unitOfWork.Save();
 
             return Ok(state);
         }
@@ -54,13 +53,13 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult UpdateState([FromRoute] int id, StateDTO model)
         {
-            State state = repository.Read(id);
+            State state = unitOfWork.StatesRepository.Read(id);
 
             if (state != null)
             {
                 state.StateName = model.StateName;
 
-                repository.Save();
+                unitOfWork.Save();
 
                 return Ok(state);
             }
@@ -72,13 +71,13 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult DeleteState([FromRoute] int id)
         {
-            State state = repository.Read(id);
+            State state = unitOfWork.StatesRepository.Read(id);
 
             if (state != null)
             {
-                repository.Delete(id);
+                unitOfWork.StatesRepository.Delete(id);
 
-                repository.Save();
+                unitOfWork.Save();
 
                 return Ok(state);
             }

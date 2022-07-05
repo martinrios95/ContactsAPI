@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data;
+using ContactsAPI.Filters;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,16 @@ namespace ContactsAPI.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("Kaboom")]
+        public IActionResult Kaboom()
+        {
+            throw new Exception("KABOOM");
+
+            // It highlights as "never accesible" code, but...
+            return Content("Never gets there");
         }
 
         [HttpPost]

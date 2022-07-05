@@ -5,7 +5,7 @@ namespace ContactsAPI.Data
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private ContactsAPIDbContext dbContext;
+        private readonly ContactsAPIDbContext dbContext;
 
         public Repository<State, int> StatesRepository { get; set; }
         public Repository<City, int> CitiesRepository { get; set; }
@@ -25,7 +25,8 @@ namespace ContactsAPI.Data
             dbContext.SaveChanges();
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             dbContext.Dispose();
             GC.SuppressFinalize(this);
         }

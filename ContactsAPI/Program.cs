@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlite
 
 // Set exception filter
 builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
-builder.Services.AddControllers(options => options.Filters.Add(new PhoneValidationFilter()));
+builder.Services.AddControllers(options => options.Filters.Add(new ModelValidationFilter()));
 
 var app = builder.Build();
 

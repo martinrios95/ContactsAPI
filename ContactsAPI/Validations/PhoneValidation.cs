@@ -3,7 +3,7 @@
 namespace ContactsAPI.Validations
 {
     /**
-     * Basic validation of (xxx)xxx-xxxx expression attribute
+     * Basic validation of (xxx) xxx-xxxx expression attribute
      */
     public class PhoneValidation: ValidationAttribute
     {
@@ -55,7 +55,7 @@ namespace ContactsAPI.Validations
             remainingNumbersLength -= numHyphens;
             remainingNumbersLength -= numSpaces;
 
-            return numBrackets == 2 && numHyphens == 1 && numNumbers == remainingNumbersLength;
+            return numBrackets == 2 && numHyphens == 1 && numSpaces == 1 && numNumbers == remainingNumbersLength;
         }
     }
 }

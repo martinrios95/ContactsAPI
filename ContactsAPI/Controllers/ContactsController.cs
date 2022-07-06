@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data;
+using ContactsAPI.Filters;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost]
+        [PhoneValidationFilter]
         public IActionResult AddContact(ContactDTO model)
         {
             City city = unitOfWork.CitiesRepository.Read(model.CityID);
@@ -62,6 +64,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [PhoneValidationFilter]
         public IActionResult UpdateContact([FromRoute] Guid id, ContactDTO model)
         {
             City city = unitOfWork.CitiesRepository.Read(model.CityID);

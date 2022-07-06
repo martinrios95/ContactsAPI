@@ -9,6 +9,7 @@ namespace ContactsAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StateID { get; set; }
 
+        [Required]
         public string StateName { get; set; }
     }
 }

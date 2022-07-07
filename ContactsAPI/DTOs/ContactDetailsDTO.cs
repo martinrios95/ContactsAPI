@@ -1,16 +1,13 @@
-﻿using ContactsAPI.Validations;
-
-namespace ContactsAPI.DTOs
+﻿namespace ContactsAPI.DTOs
 {
-    public class ContactDTO
+    public class ContactDetailsDTO
     {
         public string ContactName { get; set; }
 
         public string ContactAddress { get; set; }
 
-        [PhoneValidation]
         public string ContactPhone { get; set; }
-
-        public int CityID { get; set; }
+        public string CityName { get; set; }
+        public string StateName { get; set; }
     }
 }

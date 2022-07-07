@@ -16,7 +16,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 // Switch to a SQLite database
+// Remember to add NuGet package (easy one...)
 // builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Switch to a SQL Server LocalDB database
+// Remember to add NuGet package (easy one...)
 builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Set exception filter

@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data;
+using ContactsAPI.DTOs;
 using ContactsAPI.Filters;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,33 @@ namespace ContactsAPI.Controllers
             }
 
             return Ok(contact);
+        }
+
+        [HttpGet]
+        [Route("Details/{id:guid}")]
+        public IActionResult GetContactDetails([FromRoute] Guid id)
+        {
+            Contact contact = unitOfWork.ContactsRepository.Read(id);
+
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            City city = unitOfWork.CitiesRepository.Read(contact.CityID);
+
+            State state = unitOfWork.StatesRepository.Read(city.StateID);
+
+            ContactDetailsDTO dto = new ContactDetailsDTO()
+            {
+                ContactName = contact.ContactName,
+                ContactAddress = contact.ContactAddress,
+                ContactPhone = contact.ContactPhone,
+                CityName = city.CityName,
+                StateName = state.StateName
+            };
+
+            return Ok(dto);
         }
 
         [HttpPost]

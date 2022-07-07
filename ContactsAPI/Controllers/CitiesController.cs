@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data;
+using ContactsAPI.DTOs;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,28 @@ namespace ContactsAPI.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("Details/{id:int}")]
+        public IActionResult GetCityDetails([FromRoute] int id)
+        {
+            City city = unitOfWork.CitiesRepository.Read(id);
+
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            State state = unitOfWork.StatesRepository.Read(city.StateID);
+
+            CityDetailsDTO dto = new CityDetailsDTO()
+            {
+                CityName = city.CityName,
+                StateName = state.StateName
+            };
+
+            return Ok(dto);
         }
 
         [HttpGet]
@@ -97,8 +120,6 @@ namespace ContactsAPI.Controllers
         public IActionResult DeleteCity([FromRoute] int id)
         {
             City city = unitOfWork.CitiesRepository.Read(id);
-
-            // TODO: The state's not gonna be wiped
 
             if (city != null)
             {

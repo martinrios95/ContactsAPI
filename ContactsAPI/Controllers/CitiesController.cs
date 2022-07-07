@@ -1,5 +1,4 @@
 ﻿using ContactsAPI.Data;
-using ContactsAPI.Filters;
 using ContactsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 

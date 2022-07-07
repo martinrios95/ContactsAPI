@@ -3,15 +3,19 @@ using System;
 using ContactsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace ContactsAPI.Migrations
 {
     [DbContext(typeof(ContactsAPIDbContext))]
-    partial class ContactsAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220707173737_ContactsAPI")]
+    partial class ContactsAPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

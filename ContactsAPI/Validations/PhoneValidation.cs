@@ -5,7 +5,7 @@ namespace ContactsAPI.Validations
     /**
      * Basic validation of (xxx) xxx-xxxx expression attribute
      */
-    public class PhoneValidation: ValidationAttribute
+    public class PhoneValidation : ValidationAttribute
     {
         public override bool IsValid(object? value)
         {

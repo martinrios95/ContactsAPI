@@ -7,7 +7,7 @@ namespace ContactsAPI.Data
     {
         public ContactsAPIDbContext(DbContextOptions<ContactsAPIDbContext> options) : base(options)
         {
-            // Only on SQLite --> It's like "CREATE TABLE IF NOT EXISTS"
+            // Only on any SQL-based DB --> It's like "CREATE TABLE IF NOT EXISTS"
             Database.EnsureCreated();
         }
 

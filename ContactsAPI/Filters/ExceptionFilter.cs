@@ -14,7 +14,7 @@ namespace ContactsAPI.Filters
             HttpContext ctx = context.HttpContext;
             string json = JsonSerializer.Serialize(new { error = context.Exception.Message });
 
-            ctx.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            ctx.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             ctx.Response.ContentType = Application.Json;
             ctx.Response.WriteAsync(json);
         }

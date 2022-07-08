@@ -1,6 +1,7 @@
 ﻿using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -9,24 +10,25 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class StatesController : Controller
     {
-        private readonly UnitOfWork unitOfWork;
+        private readonly StateService service;
 
-        public StatesController(ContactsAPIDbContext dbContext)
+        public StatesController(ContactsAPIDbContext context)
         {
-            unitOfWork = new UnitOfWork(dbContext);
+            // TODO: Replace with a DI-container service
+            service = new StateService(new UnitOfWork(context));
         }
 
         [HttpGet]
         public IActionResult GetStates()
         {
-            return Ok(unitOfWork.StatesRepository.GetAll());
+            return Ok(service.GetAllStates());
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetState([FromRoute] int id)
         {
-            State state = unitOfWork.StatesRepository.Read(id);
+            State state = service.GetState(id);
 
             if (state != null)
             {
@@ -39,51 +41,35 @@ namespace ContactsAPI.Controllers
         [HttpPost]
         public IActionResult AddState(StateDTO model)
         {
-            State state = new State()
-            {
-                StateName = model.StateName
-            };
-
-            unitOfWork.StatesRepository.Create(state);
-            unitOfWork.Save();
-
-            return Ok(state);
+            return Ok(service.AddState(model));
         }
 
         [HttpPut]
         [Route("{id:int}")]
         public IActionResult UpdateState([FromRoute] int id, StateDTO model)
         {
-            State state = unitOfWork.StatesRepository.Read(id);
+            State state = service.UpdateState(id, model);
 
-            if (state != null)
+            if (state == null)
             {
-                state.StateName = model.StateName;
-
-                unitOfWork.Save();
-
-                return Ok(state);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(state);
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult DeleteState([FromRoute] int id)
         {
-            State state = unitOfWork.StatesRepository.Read(id);
+            State state = service.DeleteState(id);
 
-            if (state != null)
+            if (state == null)
             {
-                unitOfWork.StatesRepository.Delete(id);
-
-                unitOfWork.Save();
-
-                return Ok(state);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(state);
         }
     }
 }

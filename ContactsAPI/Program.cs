@@ -1,5 +1,8 @@
 using ContactsAPI.Data;
+using ContactsAPI.Data.Interfaces;
 using ContactsAPI.Filters;
+using ContactsAPI.Services;
+using ContactsAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +29,9 @@ builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlSer
 // Set exception filter
 builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
 builder.Services.AddControllers(options => options.Filters.Add(new ModelValidationFilter()));
+
+// TODO: Set Services
+// builder.Services.AddTransient<IService, CustomService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 ﻿using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
+using ContactsAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -9,52 +10,46 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class CitiesController : Controller
     {
-        private readonly UnitOfWork unitOfWork;
+        private readonly CityService service;
 
-        public CitiesController(ContactsAPIDbContext dbContext)
+        public CitiesController(ContactsAPIDbContext context)
         {
-            unitOfWork = new UnitOfWork(dbContext);
+            // TODO: Replace with a DI-container service
+            service = new CityService(new UnitOfWork(context));
         }
 
         [HttpGet]
         public IActionResult GetCities()
         {
-            return Ok(unitOfWork.CitiesRepository.GetAll());
+            return Ok(service.GetAllCities());
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetCity([FromRoute] int id)
         {
-            City city = unitOfWork.CitiesRepository.Read(id);
-            if (city != null)
-            {
-                return Ok(city);
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet]
-        [Route("Details/{id:int}")]
-        public IActionResult GetCityDetails([FromRoute] int id)
-        {
-            City city = unitOfWork.CitiesRepository.Read(id);
+            City city = service.GetCity(id);
 
             if (city == null)
             {
                 return NotFound();
             }
 
-            State state = unitOfWork.StatesRepository.Read(city.StateID);
+            return Ok(city);
+        }
 
-            CityDetailsDTO dto = new CityDetailsDTO()
+        [HttpGet]
+        [Route("Details/{id:int}")]
+        public IActionResult GetCityDetails([FromRoute] int id)
+        {
+            CityDetailsDTO city = service.GetCityDetails(id);
+
+            if (city == null)
             {
-                CityName = city.CityName,
-                StateName = state.StateName
-            };
+                return NotFound();
+            }
 
-            return Ok(dto);
+            return Ok(city);
         }
 
         [HttpGet]
@@ -70,21 +65,12 @@ namespace ContactsAPI.Controllers
         [HttpPost]
         public IActionResult AddCity(CityDTO model)
         {
-            State state = unitOfWork.StatesRepository.Read(model.StateID);
+            City city = service.AddCity(model);
 
-            if (state == null)
+            if (city == null)
             {
-                return NotFound(Content("State not found"));
+                return NotFound();
             }
-
-            City city = new City()
-            {
-                CityName = model.CityName,
-                StateID = model.StateID
-            };
-
-            unitOfWork.CitiesRepository.Create(city);
-            unitOfWork.Save();
 
             return Ok(city);
         }
@@ -93,45 +79,28 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult UpdateCity([FromRoute] int id, CityDTO model)
         {
-            State state = unitOfWork.StatesRepository.Read(model.StateID);
+            City city = service.UpdateCity(id, model);
 
-            if (state == null)
+            if (city == null)
             {
-                return NotFound(Content("State not found"));
+                return NotFound();
             }
 
-            City city = unitOfWork.CitiesRepository.Read(id);
-
-            if (city != null)
-            {
-                city.CityName = model.CityName;
-                city.StateID = model.StateID;
-
-                unitOfWork.CitiesRepository.Update(city);
-
-                return Ok(city);
-            }
-
-            return NotFound();
+            return Ok(city);
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult DeleteCity([FromRoute] int id)
         {
-            City city = unitOfWork.CitiesRepository.Read(id);
+            City city = service.DeleteCity(id);
 
-            if (city != null)
+            if (city == null)
             {
-
-                unitOfWork.CitiesRepository.Delete(id);
-
-                unitOfWork.Save();
-
-                return Ok(city);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(city);
         }
     }
 }

@@ -24,11 +24,19 @@ namespace ContactsAPI.Services
 
         public ServiceResponse<State> GetState(int id)
         {
-            return new ServiceResponse<State>()
+            var response = new ServiceResponse<State>()
             {
                 Response = unitOfWork.StatesRepository.Read(id),
                 ResponseType = ResponseTypes.SUCCESS
             };
+
+            if (response.Response == null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+            }
+
+            return response;
         }
 
         public ServiceResponse<State> AddState(StateDTO dto)

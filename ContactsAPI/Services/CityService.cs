@@ -24,20 +24,36 @@ namespace ContactsAPI.Services
 
         public ServiceResponse<City> GetCity(int id)
         {
-            return new ServiceResponse<City>()
+            var response = new ServiceResponse<City>()
             {
                 Response = unitOfWork.CitiesRepository.Read(id),
                 ResponseType = ResponseTypes.SUCCESS
             };
+
+            if (response.Response == null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "City not found!";
+            }
+
+            return response;
         }
 
         public ServiceResponse<State> GetState(int id)
         {
-            return new ServiceResponse<State>()
+            var response = new ServiceResponse<State>()
             {
                 Response = unitOfWork.StatesRepository.Read(id),
                 ResponseType = ResponseTypes.SUCCESS
             };
+
+            if (response.Response == null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+            }
+
+            return response;
         }
 
         public ServiceResponse<City> AddCity(CityDTO dto)

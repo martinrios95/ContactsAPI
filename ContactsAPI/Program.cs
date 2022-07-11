@@ -30,10 +30,10 @@ builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlSer
 builder.Services.AddControllers(options => options.Filters.Add(new ModelValidationFilter()));
 
 // TODO: Set Unit-of-Work and Services
-builder.Services.AddScoped<UnitOfWork>();
-builder.Services.AddScoped<StateService>();
-builder.Services.AddScoped<CityService>();
-builder.Services.AddScoped<ContactService>();
+builder.Services.AddTransient<UnitOfWork>();
+builder.Services.AddTransient<StateService>();
+builder.Services.AddTransient<CityService>();
+builder.Services.AddTransient<ContactService>();
 
 var app = builder.Build();
 

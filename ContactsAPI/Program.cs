@@ -1,8 +1,7 @@
 using ContactsAPI.Data;
-using ContactsAPI.Data.Interfaces;
 using ContactsAPI.Filters;
+using ContactsAPI.Middlewares;
 using ContactsAPI.Services;
-using ContactsAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,13 +26,19 @@ builder.Logging.AddConsole();
 builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Set exception filter
-builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
+// builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
 builder.Services.AddControllers(options => options.Filters.Add(new ModelValidationFilter()));
 
-// TODO: Set Services
-// builder.Services.AddTransient<IService, CustomService>();
+// TODO: Set Unit-of-Work and Services
+builder.Services.AddScoped<UnitOfWork>();
+builder.Services.AddScoped<StateService>();
+builder.Services.AddScoped<CityService>();
+builder.Services.AddScoped<ContactService>();
 
 var app = builder.Build();
+
+// Use middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

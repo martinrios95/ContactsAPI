@@ -1,7 +1,6 @@
-﻿using ContactsAPI.Data;
-using ContactsAPI.DTOs;
-using ContactsAPI.Models;
+﻿using ContactsAPI.DTOs;
 using ContactsAPI.Services;
+using ContactsAPI.Services.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -12,51 +11,50 @@ namespace ContactsAPI.Controllers
     {
         private readonly CityService service;
 
-        public CitiesController(ContactsAPIDbContext context)
+        public CitiesController(CityService service)
         {
-            // TODO: Replace with a DI-container service
-            service = new CityService(new UnitOfWork(context));
+            this.service = service;
         }
 
         [HttpGet]
         public IActionResult GetCities()
         {
-            return Ok(service.GetAllCities());
+            return Ok(service.GetAllCities().Response);
         }
 
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetCity([FromRoute] int id)
         {
-            City city = service.GetCity(id);
+            var response = service.GetCity(id);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(response.Response);
         }
 
         [HttpGet]
         [Route("Details/{id:int}")]
         public IActionResult GetCityDetails([FromRoute] int id)
         {
-            CityDetailsDTO city = service.GetCityDetails(id);
+            var response = service.GetCityDetails(id);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(response.Response);
         }
 
         [HttpGet]
         [Route("Kaboom")]
         public IActionResult Kaboom()
         {
-            throw new Exception("KABOOM");
+            throw new Exception("KABOOM CON ESTILO");
 
             // It highlights as "never accesible" code, but...
             return Content("Never gets there");
@@ -65,42 +63,42 @@ namespace ContactsAPI.Controllers
         [HttpPost]
         public IActionResult AddCity(CityDTO model)
         {
-            City city = service.AddCity(model);
+            var response = service.AddCity(model);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(response.Response);
         }
 
         [HttpPut]
         [Route("{id:int}")]
         public IActionResult UpdateCity([FromRoute] int id, CityDTO model)
         {
-            City city = service.UpdateCity(id, model);
+            var response = service.UpdateCity(id, model);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(response.Response);
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult DeleteCity([FromRoute] int id)
         {
-            City city = service.DeleteCity(id);
+            var response = service.DeleteCity(id);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(response.Response);
         }
     }
 }

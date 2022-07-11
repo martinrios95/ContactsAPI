@@ -1,7 +1,7 @@
-﻿using ContactsAPI.Data;
-using ContactsAPI.DTOs;
+﻿using ContactsAPI.DTOs;
 using ContactsAPI.Filters;
-using ContactsAPI.Models;
+using ContactsAPI.Services;
+using ContactsAPI.Services.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -10,84 +10,59 @@ namespace ContactsAPI.Controllers
     [Route("api/[controller]")]
     public class ContactsController : Controller
     {
-        private readonly UnitOfWork unitOfWork;
+        private readonly ContactService service;
 
-        public ContactsController(ContactsAPIDbContext dbContext)
+        public ContactsController(ContactService service)
         {
-            unitOfWork = new UnitOfWork(dbContext);
+            this.service = service;
         }
 
         [HttpGet]
         public IActionResult GetContacts()
         {
-            return Ok(unitOfWork.ContactsRepository.GetAll());
+            return Ok(service.GetAllContacts().Response);
         }
 
         [HttpGet]
         [Route("{id:guid}")]
         public IActionResult GetContact([FromRoute] Guid id)
         {
-            Contact contact = unitOfWork.ContactsRepository.Read(id);
+            var response = service.GetContact(id);
 
-            if (contact == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound();
+                return NotFound(response.ResponseMessage);
             }
 
-            return Ok(contact);
+            return Ok(response.Response);
         }
 
         [HttpGet]
         [Route("Details/{id:guid}")]
         public IActionResult GetContactDetails([FromRoute] Guid id)
         {
-            Contact contact = unitOfWork.ContactsRepository.Read(id);
+            var response = service.GetContactDetails(id);
 
-            if (contact == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound();
+                return NotFound(response.ResponseMessage);
             }
 
-            City city = unitOfWork.CitiesRepository.Read(contact.CityID);
-
-            State state = unitOfWork.StatesRepository.Read(city.StateID);
-
-            ContactDetailsDTO dto = new ContactDetailsDTO()
-            {
-                ContactName = contact.ContactName,
-                ContactAddress = contact.ContactAddress,
-                ContactPhone = contact.ContactPhone,
-                CityName = city.CityName,
-                StateName = state.StateName
-            };
-
-            return Ok(dto);
+            return Ok(response.Response);
         }
 
         [HttpPost]
         [ModelValidationFilter]
         public IActionResult AddContact(ContactDTO model)
         {
-            City city = unitOfWork.CitiesRepository.Read(model.CityID);
+            var response = service.AddContact(model);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound(Content("City not found"));
+                return NotFound(response.ResponseMessage);
             }
 
-            Contact contact = new Contact()
-            {
-                ContactID = Guid.NewGuid(),
-                ContactName = model.ContactName,
-                ContactAddress = model.ContactAddress,
-                ContactPhone = model.ContactPhone,
-                CityID = model.CityID
-            };
-
-            unitOfWork.ContactsRepository.Create(contact);
-            unitOfWork.Save();
-
-            return Ok(contact);
+            return Ok(response.Response);
         }
 
         [HttpPut]
@@ -95,45 +70,28 @@ namespace ContactsAPI.Controllers
         [ModelValidationFilter]
         public IActionResult UpdateContact([FromRoute] Guid id, ContactDTO model)
         {
-            City city = unitOfWork.CitiesRepository.Read(model.CityID);
+            var response = service.UpdateContact(id, model);
 
-            if (city == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound(Content("City not found"));
+                return NotFound(response.ResponseMessage);
             }
 
-            Contact contact = unitOfWork.ContactsRepository.Read(id);
-
-            if (contact != null)
-            {
-                contact.ContactName = model.ContactName;
-                contact.ContactAddress = model.ContactAddress;
-                contact.ContactPhone = model.ContactPhone;
-                contact.CityID = model.CityID;
-
-                unitOfWork.Save();
-
-                return Ok(contact);
-            }
-
-            return NotFound();
+            return Ok(response.Response);
         }
 
         [HttpDelete]
         [Route("{id:guid}")]
         public IActionResult DeleteContact([FromRoute] Guid id)
         {
-            Contact contact = unitOfWork.ContactsRepository.Read(id);
+            var response = service.DeleteContact(id);
 
-            if (contact != null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                unitOfWork.ContactsRepository.Delete(id);
-                unitOfWork.Save();
-
-                return Ok(contact);
+                return NotFound(response.ResponseMessage);
             }
 
-            return NotFound();
+            return Ok(response.Response);
         }
     }
 }

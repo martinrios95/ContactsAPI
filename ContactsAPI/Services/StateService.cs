@@ -1,11 +1,11 @@
 ﻿using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
-using ContactsAPI.Services.Interfaces;
+using ContactsAPI.Services.Enums;
 
 namespace ContactsAPI.Services
 {
-    public class StateService: IService
+    public class StateService
     {
         private UnitOfWork unitOfWork;
         public StateService(UnitOfWork unitOfWork)
@@ -13,17 +13,25 @@ namespace ContactsAPI.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<State> GetAllStates()
+        public ServiceResponse<IEnumerable<State>> GetAllStates()
         {
-            return unitOfWork.StatesRepository.GetAll();
+            return new ServiceResponse<IEnumerable<State>>()
+            {
+                Response = unitOfWork.StatesRepository.GetAll(),
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public State GetState(int id)
+        public ServiceResponse<State> GetState(int id)
         {
-            return unitOfWork.StatesRepository.Read(id);
+            return new ServiceResponse<State>()
+            {
+                Response = unitOfWork.StatesRepository.Read(id),
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public State AddState(StateDTO dto)
+        public ServiceResponse<State> AddState(StateDTO dto)
         {
             State state = new State()
             {
@@ -33,39 +41,59 @@ namespace ContactsAPI.Services
             unitOfWork.StatesRepository.Create(state);
             unitOfWork.Save();
 
-            return state;
+            return new ServiceResponse<State>()
+            {
+                Response = state,
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public State UpdateState(int id, StateDTO dto)
+        public ServiceResponse<State> UpdateState(int id, StateDTO dto)
         {
-            State state = GetState(id);
+            State state = GetState(id).Response;
+
+            var response = new ServiceResponse<State>()
+            {
+                Response = state,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (state == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+                return response;
             }
 
             state.StateName = dto.StateName;
 
             unitOfWork.Save();
 
-            return state;
+            return response;
         }
 
-        public State DeleteState(int id)
+        public ServiceResponse<State> DeleteState(int id)
         {
-            State state = GetState(id);
+            State state = GetState(id).Response;
+
+            var response = new ServiceResponse<State>()
+            {
+                Response = state,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (state == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+                return response;
             }
 
             unitOfWork.StatesRepository.Delete(id);
 
             unitOfWork.Save();
 
-            return state;
+            return response;
         }
     }
 }

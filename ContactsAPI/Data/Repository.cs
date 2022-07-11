@@ -41,7 +41,8 @@ namespace ContactsAPI.Data
 
         public T Update(T entity)
         {
-            throw new NotImplementedException();
+            dbContext.Set<T>().Update(entity);
+            return entity;
         }
     }
 }

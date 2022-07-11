@@ -1,6 +1,7 @@
 ﻿using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
+using ContactsAPI.Services.Enums;
 
 namespace ContactsAPI.Services
 {
@@ -12,28 +13,48 @@ namespace ContactsAPI.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<City> GetAllCities()
+        public ServiceResponse<IEnumerable<City>> GetAllCities()
         {
-            return unitOfWork.CitiesRepository.GetAll();
+            return new ServiceResponse<IEnumerable<City>>()
+            {
+                Response = unitOfWork.CitiesRepository.GetAll(),
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public City GetCity(int id)
+        public ServiceResponse<City> GetCity(int id)
         {
-            return unitOfWork.CitiesRepository.Read(id);
+            return new ServiceResponse<City>()
+            {
+                Response = unitOfWork.CitiesRepository.Read(id),
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public State GetState(int id)
+        public ServiceResponse<State> GetState(int id)
         {
-            return unitOfWork.StatesRepository.Read(id);
+            return new ServiceResponse<State>()
+            {
+                Response = unitOfWork.StatesRepository.Read(id),
+                ResponseType = ResponseTypes.SUCCESS
+            };
         }
 
-        public City AddCity(CityDTO dto)
+        public ServiceResponse<City> AddCity(CityDTO dto)
         {
-            State state = GetState(dto.StateID);
+            State state = GetState(dto.StateID).Response;
+
+            var response = new ServiceResponse<City>()
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (state == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+                return response;
             }
 
             City city = new City()
@@ -45,19 +66,30 @@ namespace ContactsAPI.Services
             unitOfWork.CitiesRepository.Create(city);
             unitOfWork.Save();
 
-            return city;
+
+            response.Response = city;
+
+            return response;
         }
 
-        public CityDetailsDTO GetCityDetails(int id)
+        public ServiceResponse<CityDetailsDTO> GetCityDetails(int id)
         {
-            City city = GetCity(id);
+            City city = GetCity(id).Response;
+
+            var response = new ServiceResponse<CityDetailsDTO>()
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (city == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "City not found!";
+                return response;
             }
 
-            State state = GetState(city.StateID);
+            State state = GetState(city.StateID).Response;
 
             CityDetailsDTO dto = new CityDetailsDTO()
             {
@@ -65,47 +97,71 @@ namespace ContactsAPI.Services
                 StateName = state.StateName
             };
 
-            return dto;
+            response.Response = dto;
+
+            return response;
         }
 
-        public City UpdateCity(int id, CityDTO dto)
+        public ServiceResponse<City> UpdateCity(int id, CityDTO dto)
         {
-            State state = GetState(dto.StateID);
+            State state = GetState(dto.StateID).Response;
+
+            var response = new ServiceResponse<City>()
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (state == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+                return response;
             }
 
-            City city = GetCity(id);
+            City city = GetCity(id).Response;
 
             if (city == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "City not found!";
+                return response;
             }
 
             city.CityName = dto.CityName;
             city.StateID = dto.StateID;
 
-            unitOfWork.CitiesRepository.Update(city);
+            unitOfWork.Save();
 
-            return city;
+            response.Response = city;
+
+            return response;
         }
 
-        public City DeleteCity(int id)
+        public ServiceResponse<City> DeleteCity(int id)
         {
-            City city = GetCity(id);
+            City city = GetCity(id).Response;
+
+            var response = new ServiceResponse<City>()
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
 
             if (city == null)
             {
-                return null;
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "City not found!";
+                return response;
             }
 
             unitOfWork.CitiesRepository.Delete(id);
 
             unitOfWork.Save();
 
-            return city;
+            response.Response = city;
+
+            return response;
         }
     }
 }

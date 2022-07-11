@@ -1,7 +1,6 @@
-﻿using ContactsAPI.Data;
-using ContactsAPI.DTOs;
-using ContactsAPI.Models;
+﻿using ContactsAPI.DTOs;
 using ContactsAPI.Services;
+using ContactsAPI.Services.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -12,10 +11,9 @@ namespace ContactsAPI.Controllers
     {
         private readonly StateService service;
 
-        public StatesController(ContactsAPIDbContext context)
+        public StatesController(StateService service)
         {
-            // TODO: Replace with a DI-container service
-            service = new StateService(new UnitOfWork(context));
+            this.service = service;
         }
 
         [HttpGet]
@@ -28,48 +26,48 @@ namespace ContactsAPI.Controllers
         [Route("{id:int}")]
         public IActionResult GetState([FromRoute] int id)
         {
-            State state = service.GetState(id);
+            var response = service.GetState(id);
 
-            if (state != null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return Ok(state);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(response.Response);
         }
 
         [HttpPost]
         public IActionResult AddState(StateDTO model)
         {
-            return Ok(service.AddState(model));
+            return Ok(service.AddState(model).Response);
         }
 
         [HttpPut]
         [Route("{id:int}")]
         public IActionResult UpdateState([FromRoute] int id, StateDTO model)
         {
-            State state = service.UpdateState(id, model);
+            var response = service.UpdateState(id, model);
 
-            if (state == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(state);
+            return Ok(response.Response);
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult DeleteState([FromRoute] int id)
         {
-            State state = service.DeleteState(id);
+            var response = service.DeleteState(id);
 
-            if (state == null)
+            if (response.ResponseType == ResponseTypes.ERROR)
             {
                 return NotFound();
             }
 
-            return Ok(state);
+            return Ok(response.Response);
         }
     }
 }

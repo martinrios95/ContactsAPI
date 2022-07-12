@@ -3,7 +3,12 @@
 namespace ContactsAPI.Validations
 {
     /**
-     * Basic validation of (xxx) xxx-xxxx expression attribute
+     * Criteria
+     * 
+     * 10 numbers
+     * All numbers
+     * No spaces
+     * Without 0 or 15
      */
     public class PhoneValidation : ValidationAttribute
     {
@@ -13,49 +18,25 @@ namespace ContactsAPI.Validations
 
             str = str.Trim();
 
-            int numBrackets = 0;
-            int numHyphens = 0;
-            int numNumbers = 0;
-            int numSpaces = 0;
+            bool isValidNumber = str.Length == 10;
 
-            int remainingNumbersLength = str.Length;
-
-            for (int i = 0; i < str.Length; i++)
+            if (isValidNumber)
             {
-                char chr = str[i];
+                isValidNumber = !str.StartsWith("0") && !str.StartsWith("15");
 
-                switch (chr)
+                bool areOnlyNumbers = isValidNumber;
+                int i = 0;
+
+                while (areOnlyNumbers && i < str.Length)
                 {
-                    case ' ':
-                        numSpaces++;
-                        break;
-                    case '(':
-                    case ')':
-                        numBrackets++;
-                        break;
-                    case '-':
-                        numHyphens++;
-                        break;
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        numNumbers++;
-                        break;
+                    areOnlyNumbers = char.IsDigit(str[i]);
+                    i++;
                 }
+
+                isValidNumber = areOnlyNumbers;
             }
 
-            remainingNumbersLength -= numBrackets;
-            remainingNumbersLength -= numHyphens;
-            remainingNumbersLength -= numSpaces;
-
-            return numBrackets == 2 && numHyphens == 1 && numSpaces == 1 && numNumbers == remainingNumbersLength;
+            return isValidNumber;
         }
     }
 }

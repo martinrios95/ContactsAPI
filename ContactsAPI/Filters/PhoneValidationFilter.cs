@@ -5,7 +5,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ContactsAPI.Filters
 {
-    public class ModelValidationFilter : ActionFilterAttribute
+    public class PhoneValidationFilter : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {

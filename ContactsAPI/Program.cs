@@ -27,7 +27,7 @@ builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlSer
 
 // Set exception filter
 // builder.Services.AddControllers(options => options.Filters.Add(new ExceptionFilter()));
-builder.Services.AddControllers(options => options.Filters.Add(new ModelValidationFilter()));
+builder.Services.AddControllers(options => options.Filters.Add(new PhoneValidationFilter()));
 
 // TODO: Set Unit-of-Work and Services
 builder.Services.AddTransient<UnitOfWork>();

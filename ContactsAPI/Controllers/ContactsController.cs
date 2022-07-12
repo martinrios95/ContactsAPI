@@ -52,7 +52,7 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpPost]
-        [ModelValidationFilter]
+        [PhoneValidationFilter]
         public IActionResult AddContact(ContactDTO model)
         {
             var response = service.AddContact(model);
@@ -67,7 +67,7 @@ namespace ContactsAPI.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        [ModelValidationFilter]
+        [PhoneValidationFilter]
         public IActionResult UpdateContact([FromRoute] Guid id, ContactDTO model)
         {
             var response = service.UpdateContact(id, model);

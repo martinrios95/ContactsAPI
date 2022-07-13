@@ -37,6 +37,20 @@ namespace ContactsAPI.Controllers
         }
 
         [HttpGet]
+        [Route("State/{id:int}")]
+        public IActionResult GetCitiesFromState([FromRoute] int id)
+        {
+            var response = service.GetCitiesFromState(id);
+
+            if (response.ResponseType == ResponseTypes.ERROR)
+            {
+                return NotFound();
+            }
+
+            return Ok(response.Response);
+        }
+
+        [HttpGet]
         [Route("Details/{id:int}")]
         public IActionResult GetCityDetails([FromRoute] int id)
         {

@@ -3,6 +3,7 @@ using System;
 using ContactsAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,67 +12,195 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactsAPI.Migrations
 {
     [DbContext(typeof(ContactsAPIDbContext))]
-    [Migration("20220630191620_Contacts")]
+    [Migration("20220713190452_Contacts")]
     partial class Contacts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("ContactsAPI.Models.City", b =>
                 {
                     b.Property<int>("CityID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityID"), 1L, 1);
 
                     b.Property<string>("CityName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StateID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("CityID");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            CityID = 1,
+                            CityName = "Bahia Blanca",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 2,
+                            CityName = "Punta Alta",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 3,
+                            CityName = "Medanos",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 4,
+                            CityName = "La Boca",
+                            StateID = 2
+                        },
+                        new
+                        {
+                            CityID = 5,
+                            CityName = "Balvanera",
+                            StateID = 2
+                        },
+                        new
+                        {
+                            CityID = 6,
+                            CityName = "Caballito",
+                            StateID = 2
+                        },
+                        new
+                        {
+                            CityID = 7,
+                            CityName = "Villa Crespo",
+                            StateID = 2
+                        },
+                        new
+                        {
+                            CityID = 8,
+                            CityName = "Monte Hermoso",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 9,
+                            CityName = "La Matanza",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 10,
+                            CityName = "Mar del Plata",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 11,
+                            CityName = "Córdoba",
+                            StateID = 3
+                        },
+                        new
+                        {
+                            CityID = 12,
+                            CityName = "Villa General Belgrano",
+                            StateID = 3
+                        },
+                        new
+                        {
+                            CityID = 13,
+                            CityName = "Pigüé",
+                            StateID = 1
+                        },
+                        new
+                        {
+                            CityID = 14,
+                            CityName = "Villa Iris",
+                            StateID = 1
+                        });
                 });
 
             modelBuilder.Entity("ContactsAPI.Models.Contact", b =>
                 {
                     b.Property<Guid>("ContactID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CityID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("ContactAddress")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactPhone")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactID");
 
                     b.ToTable("Contacts");
+
+                    b.HasData(
+                        new
+                        {
+                            ContactID = new Guid("4f01ed59-e0f3-4ac2-b688-79d759183ebb"),
+                            CityID = 1,
+                            ContactAddress = "DIRECCION 2",
+                            ContactName = "NOMBRE 2",
+                            ContactPhone = "1141112222"
+                        },
+                        new
+                        {
+                            ContactID = new Guid("fb37d4b7-caeb-4ffd-8824-876bf0993447"),
+                            CityID = 4,
+                            ContactAddress = "DIRECCION 4",
+                            ContactName = "PRUEBA 4",
+                            ContactPhone = "2233334444"
+                        },
+                        new
+                        {
+                            ContactID = new Guid("bc21a495-9c03-4e9c-8558-acead3d92085"),
+                            CityID = 2,
+                            ContactAddress = "DIRECCION 3",
+                            ContactName = "PRUEBA 3",
+                            ContactPhone = "2253334444"
+                        },
+                        new
+                        {
+                            ContactID = new Guid("27fd0b27-465b-43af-929e-e0a2c33ddcb5"),
+                            CityID = 1,
+                            ContactAddress = "DIRECCION 5",
+                            ContactName = "PRUEBA 5",
+                            ContactPhone = "1155556666"
+                        });
                 });
 
             modelBuilder.Entity("ContactsAPI.Models.State", b =>
                 {
                     b.Property<int>("StateID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateID"), 1L, 1);
 
                     b.Property<string>("StateName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StateID");
 

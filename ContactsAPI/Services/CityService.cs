@@ -88,6 +88,29 @@ namespace ContactsAPI.Services
             return response;
         }
 
+        public ServiceResponse<IEnumerable<City>> GetCitiesFromState(int id)
+        {
+            State state = GetState(id).Response;
+
+            var response = new ServiceResponse<IEnumerable<City>>
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
+
+            if (state == null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "State not found!";
+                return response;
+            }
+
+            var cities = unitOfWork.CitiesRepository.GetWhere(state => state.StateID == id);
+            response.Response = cities;
+
+            return response;
+        }
+
         public ServiceResponse<CityDetailsDTO> GetCityDetails(int id)
         {
             City city = GetCity(id).Response;

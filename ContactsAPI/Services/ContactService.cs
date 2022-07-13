@@ -73,6 +73,29 @@ namespace ContactsAPI.Services
             return response;
         }
 
+        public ServiceResponse<IEnumerable<Contact>> GetContactsFromCity(int id)
+        {
+            City city = GetCity(id).Response;
+
+            var response = new ServiceResponse<IEnumerable<Contact>>
+            {
+                Response = null,
+                ResponseType = ResponseTypes.SUCCESS
+            };
+
+            if (city == null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "City not found!";
+                return response;
+            }
+
+            var contacts = unitOfWork.ContactsRepository.GetWhere(city => city.CityID == id);
+            response.Response = contacts;
+
+            return response;
+        }
+
         public ServiceResponse<ContactDetailsDTO> GetContactDetails(Guid id)
         {
             Contact contact = GetContact(id).Response;

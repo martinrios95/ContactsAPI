@@ -5,6 +5,7 @@ namespace ContactsAPI.Models
 {
     public class Contact
     {
+        [Key]
         public Guid ContactID { get; set; }
 
         [Required]

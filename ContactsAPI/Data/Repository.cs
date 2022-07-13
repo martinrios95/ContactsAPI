@@ -1,4 +1,5 @@
 ﻿using ContactsAPI.Data.Interfaces;
+using System.Linq.Expressions;
 
 namespace ContactsAPI.Data
 {
@@ -32,6 +33,11 @@ namespace ContactsAPI.Data
         public IEnumerable<T> GetAll()
         {
             return dbContext.Set<T>().ToList();
+        }
+
+        public IEnumerable<T> GetWhere(Expression<Func<T, bool>> expression)
+        {
+            return dbContext.Set<T>().Where(expression);
         }
 
         public T Read(K id)

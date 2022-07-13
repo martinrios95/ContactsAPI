@@ -51,6 +51,20 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        [HttpGet]
+        [Route("City/{id:int}")]
+        public IActionResult GetContactsFromCity([FromRoute] int id)
+        {
+            var response = service.GetContactsFromCity(id);
+
+            if (response.ResponseType == ResponseTypes.ERROR)
+            {
+                return NotFound(response.ResponseMessage);
+            }
+
+            return Ok(response.Response);
+        }
+
         [HttpPost]
         [PhoneValidationFilter]
         public IActionResult AddContact(ContactDTO model)

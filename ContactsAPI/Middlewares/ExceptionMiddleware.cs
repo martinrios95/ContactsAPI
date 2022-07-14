@@ -1,9 +1,9 @@
-﻿namespace ContactsAPI.Middlewares
-{
-    using System.Net;
-    using System.Text.Json;
-    using static System.Net.Mime.MediaTypeNames;
+﻿using System.Net;
+using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
 
+namespace ContactsAPI.Middlewares
+{   
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;

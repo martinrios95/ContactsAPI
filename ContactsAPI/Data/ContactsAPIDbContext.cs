@@ -1,9 +1,10 @@
 ﻿using ContactsAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContactsAPI.Data
 {
-    public class ContactsAPIDbContext : DbContext
+    public class ContactsAPIDbContext : IdentityDbContext
     {
         public ContactsAPIDbContext(DbContextOptions<ContactsAPIDbContext> options) : base(options)
         {

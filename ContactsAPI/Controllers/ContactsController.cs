@@ -2,12 +2,14 @@
 using ContactsAPI.Filters;
 using ContactsAPI.Services;
 using ContactsAPI.Services.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ContactsController : Controller
     {
         private readonly ContactService service;

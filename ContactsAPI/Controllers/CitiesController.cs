@@ -1,12 +1,14 @@
 ﻿using ContactsAPI.DTOs;
 using ContactsAPI.Services;
 using ContactsAPI.Services.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CitiesController : Controller
     {
         private readonly CityService service;

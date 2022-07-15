@@ -10,6 +10,7 @@ namespace ContactsAPI.Data
         public Repository<State, int> StatesRepository { get; set; }
         public Repository<City, int> CitiesRepository { get; set; }
         public Repository<Contact, Guid> ContactsRepository { get; set; }
+        public Repository<User, Guid> UsersRepository { get; set; }
 
         public UnitOfWork(ContactsAPIDbContext dbContext)
         {
@@ -18,6 +19,7 @@ namespace ContactsAPI.Data
             StatesRepository = new Repository<State, int>(this.dbContext);
             CitiesRepository = new Repository<City, int>(this.dbContext);
             ContactsRepository = new Repository<Contact, Guid>(this.dbContext);
+            UsersRepository = new Repository<User, Guid>(this.dbContext);
         }
 
         public void Save()

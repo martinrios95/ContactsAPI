@@ -1,22 +1,47 @@
 ﻿using ContactsAPI.DTOs;
+using ContactsAPI.Services;
+using ContactsAPI.Services.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        [Route("Register")]
-        public IActionResult Register([FromRoute] UserDTO dto)
+        private readonly AuthService service;
+
+        public AuthController(AuthService service)
         {
-            return Ok();
+            this.service = service;
         }
 
-        [Route("Login")]
-        public IActionResult Login([FromRoute] UserDTO dto)
+        [HttpPost]
+        [Route("Register")]
+        public IActionResult Register(UserDTO model)
         {
-            return Ok();
+            var response = service.Register(model);
+
+            if (response.ResponseType == ResponseTypes.ERROR)
+            {
+                return Unauthorized(response.ResponseMessage);
+            }
+
+            return Ok(response.Response);
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public IActionResult Login(UserDTO model)
+        {
+            var response = service.Login(model);
+
+            if (response.ResponseType == ResponseTypes.ERROR)
+            {
+                return Unauthorized(response.ResponseMessage);
+            }
+
+            return Ok(response.Response);
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using ContactsAPI.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContactsAPI.Data
 {
-    public class ContactsAPIDbContext : IdentityDbContext
+    public class ContactsAPIDbContext : DbContext
     {
         public ContactsAPIDbContext(DbContextOptions<ContactsAPIDbContext> options) : base(options)
         {
@@ -18,6 +17,7 @@ namespace ContactsAPI.Data
             new DbInitializer(builder).Seed();
         }
 
+        public DbSet<User> Users { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<State> States { get; set; }

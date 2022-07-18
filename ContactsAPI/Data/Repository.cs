@@ -50,6 +50,11 @@ namespace ContactsAPI.Data
             return GetWhere(expression).LastOrDefault();
         }
 
+        public T GetSingle(Expression<Func<T, bool>> expression)
+        {
+            return GetWhere(expression).SingleOrDefault();
+        }
+
         public T Read(K id)
         {
             return dbContext.Set<T>().Find(id);

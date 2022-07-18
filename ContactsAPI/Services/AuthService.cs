@@ -30,7 +30,7 @@ namespace ContactsAPI.Services
                 Response = new TokenDTO(),
             };
 
-            var user = unitOfWork.UsersRepository.GetFirst(user => user.Email == dto.Email);
+            var user = unitOfWork.UsersRepository.GetSingle(user => user.Email == dto.Email);
 
             if (user == null)
             {
@@ -62,7 +62,7 @@ namespace ContactsAPI.Services
             };
 
             // Check if there's already on the database
-            var user = unitOfWork.UsersRepository.GetFirst(user => user.Email == dto.Email);
+            var user = unitOfWork.UsersRepository.GetSingle(user => user.Email == dto.Email);
 
             if (user != null)
             {

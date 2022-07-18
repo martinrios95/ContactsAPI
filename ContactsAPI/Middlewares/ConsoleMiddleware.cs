@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace ContactsAPI.Middlewares
+﻿namespace ContactsAPI.Middlewares
 {
     public class ConsoleMiddleware
     {

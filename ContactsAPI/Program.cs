@@ -68,6 +68,8 @@ builder.Services.AddTransient<AuthService>();
 var app = builder.Build();
 
 // Use middleware
+app.UseMiddleware<ConsoleMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.

@@ -17,7 +17,6 @@ namespace ContactsAPI.Helpers
 
         public static string PasswordHash(string password)
         {
-            string hash = string.Empty;
             byte[] bytes = Encoding.UTF8.GetBytes(password);
 
             using (SHA256 sha256 = SHA256.Create())
@@ -25,9 +24,7 @@ namespace ContactsAPI.Helpers
                 bytes = sha256.ComputeHash(bytes);
             }
 
-            hash = ToHex(bytes, true);
-
-            return hash;
+            return ToHex(bytes, true);
         }
     }
 }

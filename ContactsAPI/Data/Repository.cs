@@ -40,6 +40,16 @@ namespace ContactsAPI.Data
             return dbContext.Set<T>().Where(expression);
         }
 
+        public T GetFirst(Expression<Func<T, bool>> expression)
+        {
+            return GetWhere(expression).FirstOrDefault();
+        }
+
+        public T GetLast(Expression<Func<T, bool>> expression)
+        {
+            return GetWhere(expression).LastOrDefault();
+        }
+
         public T Read(K id)
         {
             return dbContext.Set<T>().Find(id);

@@ -24,7 +24,10 @@ namespace ContactsAPI.Controllers
 
             if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return Unauthorized(response.ResponseMessage);
+                return Unauthorized(new
+                {
+                    message = response.ResponseMessage
+                });
             }
 
             return Ok(response.Response);
@@ -38,7 +41,10 @@ namespace ContactsAPI.Controllers
 
             if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return Unauthorized(response.ResponseMessage);
+                return Unauthorized(new
+                {
+                    message = response.ResponseMessage
+                });
             }
 
             return Ok(response.Response);

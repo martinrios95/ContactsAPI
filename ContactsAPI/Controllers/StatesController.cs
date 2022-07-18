@@ -32,7 +32,10 @@ namespace ContactsAPI.Controllers
 
             if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    message = response.ResponseMessage
+                });
             }
 
             return Ok(response.Response);
@@ -52,7 +55,10 @@ namespace ContactsAPI.Controllers
 
             if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    message = response.ResponseMessage
+                });
             }
 
             return Ok(response.Response);
@@ -66,7 +72,10 @@ namespace ContactsAPI.Controllers
 
             if (response.ResponseType == ResponseTypes.ERROR)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    message = response.ResponseMessage
+                });
             }
 
             return Ok(response.Response);

@@ -3,6 +3,7 @@ using ContactsAPI.DTOs;
 using ContactsAPI.Helpers;
 using ContactsAPI.Models;
 using ContactsAPI.Services.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -21,14 +22,15 @@ namespace ContactsAPI.Services
             this.configuration = configuration;
         }
 
-        public ServiceResponse<string> Login(UserDTO dto)
+        [AllowAnonymous]
+        public ServiceResponse<TokenDTO> Login(UserDTO dto)
         {
-            var response = new ServiceResponse<string>()
+            var response = new ServiceResponse<TokenDTO>()
             {
-                Response = string.Empty
+                Response = new TokenDTO(),
             };
 
-            var user = unitOfWork.UsersRepository.GetWhere(user => user.Email == dto.Email).First();
+            var user = unitOfWork.UsersRepository.GetFirst(user => user.Email == dto.Email);
 
             if (user == null)
             {
@@ -46,14 +48,30 @@ namespace ContactsAPI.Services
                 return response;
             }
 
-            response.Response = CreateToken(user);
+            response.Response.Token = CreateToken(user);
             response.ResponseType = ResponseTypes.SUCCESS;
             return response;
         }
 
+        [AllowAnonymous]
         public ServiceResponse<User> Register(UserDTO dto)
         {
-            var user = new User()
+            var response = new ServiceResponse<User>()
+            {
+                Response = null
+            };
+
+            // Check if there's already on the database
+            var user = unitOfWork.UsersRepository.GetFirst(user => user.Email == dto.Email);
+
+            if (user != null)
+            {
+                response.ResponseType = ResponseTypes.ERROR;
+                response.ResponseMessage = "User is already in the system!";
+                return response;
+            }
+
+            user = new User()
             {
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
@@ -63,11 +81,10 @@ namespace ContactsAPI.Services
             unitOfWork.UsersRepository.Create(user);
             unitOfWork.Save();
 
-            return new ServiceResponse<User>()
-            {
-                Response = user,
-                ResponseType = ResponseTypes.SUCCESS,
-            };
+            response.Response = user;
+            response.ResponseType = ResponseTypes.SUCCESS;
+
+            return response;
         }
 
         /**

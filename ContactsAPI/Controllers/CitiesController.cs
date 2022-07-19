@@ -18,12 +18,24 @@ namespace ContactsAPI.Controllers
             this.service = service;
         }
 
+        /// <summary>
+        /// Obtener todas las ciudades
+        /// </summary>
+        /// <returns>Una lista de ciudades</returns>
+        /// <response code="401">Si el usuario no inició sesión</response>
         [HttpGet]
         public IActionResult GetCities()
         {
             return Ok(service.GetAllCities().Response);
         }
 
+        /// <summary>
+        /// Obtener una ciudad mediante ID
+        /// </summary>
+        /// <returns>Una ciudad</returns>
+        /// <response code="200">Si la ciudad existe</response>
+        /// <response code="401">Si el usuario no inició sesión</response>
+        /// <response code="404">Si la ciudad no existe</response>
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult GetCity([FromRoute] int id)
@@ -41,6 +53,13 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// Obtener todas las ciudades de una provincia
+        /// </summary>
+        /// <returns>Las ciudades de una provincia</returns>
+        /// <response code="200">Si la provincia existe</response>
+        /// <response code="401">Si el usuario no inició sesión</response>
+        /// <response code="404">Si la provincia no existe</response>
         [HttpGet]
         [Route("State/{id:int}")]
         public IActionResult GetCitiesFromState([FromRoute] int id)
@@ -58,6 +77,13 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// Obtener detalles de una ciudad mediante ID
+        /// </summary>
+        /// <returns>Los detalles de la ciudad</returns>
+        /// <response code="200">Si la ciudad existe</response>
+        /// <response code="401">Si el usuario no inició sesión</response>
+        /// <response code="404">Si la ciudad no existe</response>
         [HttpGet]
         [Route("Details/{id:int}")]
         public IActionResult GetCityDetails([FromRoute] int id)
@@ -75,6 +101,10 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// KABOOM
+        /// </summary>
+        /// <returns>Nada, una excepción.</returns>
         [HttpGet]
         [Route("Kaboom")]
         public IActionResult Kaboom()
@@ -85,6 +115,11 @@ namespace ContactsAPI.Controllers
             return Content("Never gets there");
         }
 
+        /// <summary>
+        /// Agregar una ciudad
+        /// </summary>
+        /// <returns>La ciudad agregada</returns>
+        /// <response code="401">Si el usuario no inició sesión</response>
         [HttpPost]
         public IActionResult AddCity(CityDTO model)
         {
@@ -101,6 +136,15 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// Actualizar los datos de una ciudad
+        /// </summary>
+        /// <param name="id">El ID de ciudad</param>
+        /// <param name="model">Los datos de la ciudad</param>
+        /// <returns>La ciudad actualizada</returns>
+        /// <response code="200">Si la ciudad existe</response>
+        /// <response code="401">Si el usuario no inició sesión</response>
+        /// <response code="404">Si la ciudad no existe</response>
         [HttpPut]
         [Route("{id:int}")]
         public IActionResult UpdateCity([FromRoute] int id, CityDTO model)
@@ -118,6 +162,13 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// Borrar una ciudad
+        /// </summary>
+        /// <returns>La ciudad eliminada</returns>
+        /// <response code="200">Si la ciudad existe</response>
+        /// <response code="401">Si el usuario no inició sesión</response>
+        /// <response code="404">Si la ciudad no existe</response>
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult DeleteCity([FromRoute] int id)

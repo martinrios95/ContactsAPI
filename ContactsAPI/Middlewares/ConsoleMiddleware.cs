@@ -20,7 +20,7 @@
             // Write your custom code
 
             // Now using it ONLY for debugging
-            Console.WriteLine(DateTime.Now);
+            Console.WriteLine("Request time: " + DateTime.Now);
         }
     }
 }

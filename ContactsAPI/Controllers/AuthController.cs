@@ -1,6 +1,7 @@
 ﻿using ContactsAPI.DTOs;
 using ContactsAPI.Services;
 using ContactsAPI.Services.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsAPI.Controllers
@@ -16,7 +17,12 @@ namespace ContactsAPI.Controllers
             this.service = service;
         }
 
+        /// <summary>
+        /// Registrarse
+        /// </summary>
+        /// <response code="401">Si el e-mail ya está registrado en el sistema.</response>
         [HttpPost]
+        [AllowAnonymous]
         [Route("Register")]
         public IActionResult Register(UserDTO model)
         {
@@ -33,7 +39,13 @@ namespace ContactsAPI.Controllers
             return Ok(response.Response);
         }
 
+        /// <summary>
+        /// Iniciar sesión
+        /// </summary>
+        /// <returns>Un token Bearer JWT</returns>
+        /// <response code="401">Si el e-mail no existe o la contraseña es incorrecta.</response>
         [HttpPost]
+        [AllowAnonymous]
         [Route("Login")]
         public IActionResult Login(UserDTO model)
         {

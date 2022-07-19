@@ -3,7 +3,6 @@ using ContactsAPI.DTOs;
 using ContactsAPI.Helpers;
 using ContactsAPI.Models;
 using ContactsAPI.Services.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,7 +21,6 @@ namespace ContactsAPI.Services
             this.configuration = configuration;
         }
 
-        [AllowAnonymous]
         public ServiceResponse<TokenDTO> Login(UserDTO dto)
         {
             var response = new ServiceResponse<TokenDTO>()
@@ -53,7 +51,6 @@ namespace ContactsAPI.Services
             return response;
         }
 
-        [AllowAnonymous]
         public ServiceResponse<User> Register(UserDTO dto)
         {
             var response = new ServiceResponse<User>()

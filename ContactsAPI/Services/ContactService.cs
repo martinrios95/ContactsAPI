@@ -1,4 +1,5 @@
-﻿using ContactsAPI.Data;
+﻿using AutoMapper;
+using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
 using ContactsAPI.Services.Enums;
@@ -8,9 +9,11 @@ namespace ContactsAPI.Services
     public class ContactService
     {
         private UnitOfWork unitOfWork;
-        public ContactService(UnitOfWork unitOfWork)
+        private IMapper mapper;
+        public ContactService(UnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         public ServiceResponse<IEnumerable<Contact>> GetAllContacts()
@@ -145,14 +148,7 @@ namespace ContactsAPI.Services
                 return response;
             }
 
-            Contact contact = new Contact()
-            {
-                ContactID = Guid.NewGuid(),
-                ContactName = dto.ContactName,
-                ContactAddress = dto.ContactAddress,
-                ContactPhone = dto.ContactPhone,
-                CityID = dto.CityID
-            };
+            Contact contact = mapper.Map<Contact>(dto);
 
             unitOfWork.ContactsRepository.Create(contact);
             unitOfWork.Save();

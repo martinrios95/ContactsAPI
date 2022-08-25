@@ -1,4 +1,5 @@
-﻿using ContactsAPI.Data;
+﻿using AutoMapper;
+using ContactsAPI.Data;
 using ContactsAPI.DTOs;
 using ContactsAPI.Models;
 using ContactsAPI.Services.Enums;
@@ -8,9 +9,11 @@ namespace ContactsAPI.Services
     public class StateService
     {
         private UnitOfWork unitOfWork;
-        public StateService(UnitOfWork unitOfWork)
+        private IMapper mapper;
+        public StateService(UnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
         public ServiceResponse<IEnumerable<State>> GetAllStates()
@@ -41,10 +44,7 @@ namespace ContactsAPI.Services
 
         public ServiceResponse<State> AddState(StateDTO dto)
         {
-            State state = new State()
-            {
-                StateName = dto.StateName
-            };
+            State state = mapper.Map<State>(dto);
 
             unitOfWork.StatesRepository.Create(state);
             unitOfWork.Save();

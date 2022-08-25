@@ -6,7 +6,7 @@ namespace ContactsAPI.Models
     public class Contact
     {
         [Key]
-        public Guid ContactID { get; set; }
+        public Guid ContactID { get; set; } = Guid.NewGuid();
 
         [Required]
         public string ContactName { get; set; }

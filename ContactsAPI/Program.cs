@@ -52,6 +52,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Switch to a SQLite database
 // Remember to add NuGet package (easy one...)
 // builder.Services.AddDbContext<ContactsAPIDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));

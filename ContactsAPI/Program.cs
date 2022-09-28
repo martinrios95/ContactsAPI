@@ -3,6 +3,7 @@ using ContactsAPI.Filters;
 using ContactsAPI.Middlewares;
 using ContactsAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -52,6 +53,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
+// Add Health Status
+builder.Services.AddHealthChecks();
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -77,7 +81,6 @@ builder.Services.AddTransient<AuthService>();
 var app = builder.Build();
 
 // Use middleware
-app.UseMiddleware<ConsoleMiddleware>();
 app.UseMiddleware<AuthMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -87,6 +90,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Add Health Check endpoint
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 

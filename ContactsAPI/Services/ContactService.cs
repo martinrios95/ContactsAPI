@@ -93,8 +93,7 @@ namespace ContactsAPI.Services
                 return response;
             }
 
-            var contacts = unitOfWork.ContactsRepository.GetWhere(city => city.CityID == id);
-            response.Response = contacts;
+            response.Response = unitOfWork.GetContactsFromCity(city.CityName);
 
             return response;
         }

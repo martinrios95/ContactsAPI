@@ -104,8 +104,7 @@ namespace ContactsAPI.Services
                 return response;
             }
 
-            var cities = unitOfWork.CitiesRepository.GetWhere(state => state.StateID == id);
-            response.Response = cities;
+            response.Response = unitOfWork.GetCitiesFromState(state.StateName);
 
             return response;
         }
